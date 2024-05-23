@@ -27,3 +27,5 @@ add_custom_command(
     $<TARGET_FILE_DIR:mqt-ddsim-test>/circuits ${CMAKE_BINARY_DIR}/circuits
   COMMENT "Copying circuits and creating symlinks for mqt-ddsim-test"
   VERBATIM)
+
+add_subdirectory(qir)
