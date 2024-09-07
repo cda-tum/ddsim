@@ -68,6 +68,19 @@ def _run_tests(
         posargs.append("--cov-config=pyproject.toml")
 
     session.install(*BUILD_REQUIREMENTS, *install_args, env=env)
+
+    # install mqt.core from source to avoid ABI incompatibilities
+    session.install(
+        "--no-build-isolation",
+        "mqt.core @ git+https://github.com/cda-tum/mqt-core@shared-libs",
+        "--no-binary",
+        "mqt.core",
+        *install_args,
+        env={
+            "CMAKE_GENERATOR": "Ninja",
+        },
+    )
+
     install_arg = f"-ve.[{','.join(_extras)}]"
     session.install("--no-build-isolation", "--reinstall-package", "mqt.ddsim", install_arg, *install_args, env=env)
     session.run("pytest", *run_args, *posargs, env=env)
@@ -101,6 +114,15 @@ def docs(session: nox.Session) -> None:
     serve = args.builder == "html" and session.interactive
     extra_installs = ["sphinx-autobuild"] if serve else []
     session.install(*BUILD_REQUIREMENTS, *extra_installs)
+
+    # install mqt.core from source to avoid ABI incompatibilities
+    session.install(
+        "--no-build-isolation",
+        "mqt.core @ git+https://github.com/cda-tum/mqt-core@shared-libs",
+        "--no-binary",
+        "mqt.core",
+    )
+
     session.install("--no-build-isolation", "-ve.[docs]", "--reinstall-package", "mqt.ddsim")
 
     if args.builder == "linkcheck":

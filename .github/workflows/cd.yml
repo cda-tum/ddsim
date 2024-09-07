@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
-      - .github/workflows/cd.yml
+      - .github/workflows/cd.yml # This is to make sure changes to the CD workflow are tested before deployment.
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
